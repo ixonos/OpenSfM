@@ -1359,6 +1359,64 @@ def incremental_reconstruction(data, tracks_manager):
     report['not_reconstructed_images'] = list(remaining_images)
     return report, reconstructions
 
+def incremental_reconstruction_fastrack(data, tracks_manager, focal_prior=0.85):
+
+    """Run the entire incremental reconstruction pipeline from fastrack"""
+    logger.info("Starting incremental reconstruction")
+    report = {}
+    chrono = Chronometer()
+
+    images = tracks_manager.get_shot_ids()
+    
+    if not data.reference_lla_exists():
+        data.invent_reference_lla(images)
+
+    remaining_images = set(images)
+    camera_priors = data.load_camera_models()
+    # change all focal_length priors to proper initialization
+    for i in camera_priors.keys():
+        camera_priors[i].focal = focal_prior
+        print("\nFOCAL PRIOR INITIALIZED TO: ", focal_prior)
+    gcp = data.load_ground_control_points()
+    common_tracks = tracking.all_common_tracks(tracks_manager)
+    reconstructions = []
+    pairs = compute_image_pairs(common_tracks, camera_priors, data)
+
+    if len(pairs) == 0:
+        return [], [], True
+
+    chrono.lap('compute_image_pairs')
+    report['num_candidate_image_pairs'] = len(pairs)
+    report['reconstructions'] = []
+    for im1, im2 in pairs:
+        if im1 in remaining_images and im2 in remaining_images:
+            rec_report = {}
+            report['reconstructions'].append(rec_report)
+            _, p1, p2 = common_tracks[im1, im2]
+            reconstruction, graph_inliers, rec_report['bootstrap'] = bootstrap_reconstruction(
+                data, tracks_manager, camera_priors, im1, im2, p1, p2)
+
+            if reconstruction:
+                remaining_images.remove(im1)
+                remaining_images.remove(im2)
+                reconstruction, rec_report['grow'] = grow_reconstruction(
+                    data, tracks_manager, graph_inliers, reconstruction, remaining_images, camera_priors, gcp)
+                reconstructions.append(reconstruction)
+                reconstructions = sorted(reconstructions,
+                                         key=lambda x: -len(x.shots))
+                rec_report['stats'] = compute_statistics(reconstruction, graph_inliers)
+                logger.info(rec_report['stats'])
+
+    for k, r in enumerate(reconstructions):
+        logger.info("Reconstruction {}: {} images, {} points".format(
+            k, len(r.shots), len(r.points)))
+    logger.info("{} partial reconstructions in total.".format(
+        len(reconstructions)))
+    chrono.lap('compute_reconstructions')
+    report['wall_times'] = dict(chrono.lap_times())
+    report['not_reconstructed_images'] = list(remaining_images)
+    return report, reconstructions, False
+
 
 class Chronometer:
     def __init__(self):

@@ -508,6 +508,10 @@ class DataSet(object):
         "Filename where to write timings."
         return os.path.join(self.data_path, 'profile.log')
 
+    def est_focal_log(self):
+        "Filename where to write estimated focal length."
+        return os.path.join(self.data_path, 'est_focal.log')
+
     def _report_path(self):
         return os.path.join(self.data_path, 'reports')
 

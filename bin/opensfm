@@ -28,6 +28,9 @@ for command in subcommands:
 # Parse arguments
 args = parser.parse_args()
 
+print("\n ARGS: \n", args)
+print("commands ", subcommands)
+
 # Run the selected subcommand
 for command in subcommands:
     if args.command == command.name:
