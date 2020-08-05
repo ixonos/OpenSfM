@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.0)
+#cmake_minimum_required(VERSION 3.0)
+LINK_DIRECTORIES(/usr/local/Cellar)
 
 project(opensfm C CXX)
 
@@ -15,6 +16,7 @@ set(CMAKE_MODULE_PATH ${opensfm_SOURCE_DIR}/cmake)
 cmake_policy(SET CMP0063 NEW)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_CXX_VISIBILITY_INLINES ON)
+set(OPENSFM_BUILD_TESTS OFF)
 
 # fPIC
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -26,8 +28,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # For compiling VLFeat
 add_definitions(-DVL_DISABLE_AVX)
 
-include_directories(/usr/local/Cellar/gflags/2.2.2/include)
-include_directories(/usr/local/Cellar/glog/0.4.0/include)
+#include_directories(/usr/local/Cellar/gflags/2.2.2/include)
+#include_directories(/usr/local/Cellar/glog/0.4.0/include)
 include_directories(/usr/local/include)
 
 
@@ -44,7 +46,8 @@ find_package(Eigen REQUIRED)
 find_package(Ceres REQUIRED)
 find_package(Gflags REQUIRED)
 find_package(Glog REQUIRED)
-
+find_package(gtest REQUIRED)
+include_directories(${GLOG_INCLUDE_DIRS} ${GFLAGS_INCLUDE_DIRS})
 find_package(OpenCV)
 # OpenCV's OpenCVConfig will enforce imgcodecs for < 3.0 
 # (even if OPTIONAL_COMPONENTS) so we remove it as we don't need it
