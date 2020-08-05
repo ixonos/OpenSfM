@@ -16,7 +16,7 @@ class Command:
 
     def add_arguments(self, parser):
         parser.add_argument('dataset', help='dataset to process')
-        # parser.add_argument('focal_prior', default=0.85, help='initial focal length for BA')
+        parser.add_argument('focal_prior', default=0.85, help='initial focal length for BA')
 
     def run(self, args):
 
