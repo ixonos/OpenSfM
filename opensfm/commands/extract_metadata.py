@@ -20,7 +20,7 @@ class Command:
 
     def run(self, args):
 
-        print("\n\nhello args \n\n", args)
+        logging.info('Loading existing EXIF for' )
 
         start = time.time()
         data = dataset.DataSet(args.dataset)
