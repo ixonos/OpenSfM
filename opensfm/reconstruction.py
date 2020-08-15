@@ -1376,8 +1376,8 @@ def incremental_reconstruction_fastrack(data, tracks_manager, focal_prior=0.85):
     # change all focal_length priors to proper initialization
     cam_key = next(iter(camera_priors.keys()))
     camera_priors[cam_key].focal = focal_prior
-    print("\nFOCAL PRIOR INITIALIZED TO: ", focal_prior)
-
+    # print("\nFOCAL PRIOR INITIALIZED TO: ", focal_prior)
+    logger.info("FOCAL PRIOR INITIALIZED TO: {}".format(focal_prior))
     gcp = data.load_ground_control_points()
     common_tracks = tracking.all_common_tracks(tracks_manager)
     reconstructions = []

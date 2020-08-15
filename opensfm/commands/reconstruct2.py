@@ -11,9 +11,7 @@ def reconstruct_bundle(data_path, focal_prior = 1.0):
     data = dataset.DataSet(data_path)
     tracks_manager = data.load_tracks_manager()
 
-    logger.info("FOCAL PRIOR PYTHON: {}", focal_prior)
-
-    return -1
+    # logger.info("FOCAL PRIOR PYTHON: {}".format(focal_prior))
 
     report, reconstructions, zero_pair = reconstruction.incremental_reconstruction_fastrack(data, 
                                                                                     tracks_manager, 
