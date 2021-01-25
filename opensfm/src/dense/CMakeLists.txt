@@ -20,6 +20,8 @@ target_include_directories(dense PRIVATE ${CMAKE_SOURCE_DIR})
 #add_test(dense_test dense_test)
 
 pybind11_add_module(pydense python/pybind.cc)
+target_include_directories(pydense PRIVATE ${GLOG_INCLUDE_DIR} ${GFLAGS_INCLUDE_DIR})
+
 target_link_libraries(pydense PRIVATE dense foundation pybind11)
 set_target_properties(pydense PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${opensfm_SOURCE_DIR}/.."

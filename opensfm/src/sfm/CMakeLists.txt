@@ -25,6 +25,7 @@ target_include_directories(sfm PUBLIC ${EIGEN_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR})
 #add_test(sfm_test sfm_test)
 
 pybind11_add_module(pysfm python/pybind.cc)
+target_include_directories(pysfm PRIVATE ${GLOG_INCLUDE_DIR} ${GFLAGS_INCLUDE_DIR})
 target_link_libraries(pysfm 
   PRIVATE 
     foundation

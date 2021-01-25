@@ -17,6 +17,7 @@ target_link_libraries(features
 target_include_directories(features PRIVATE ${CMAKE_SOURCE_DIR})
 
 pybind11_add_module(pyfeatures python/pybind.cc)
+target_include_directories(pyfeatures PRIVATE ${GLOG_INCLUDE_DIR} ${GFLAGS_INCLUDE_DIR})
 target_link_libraries(pyfeatures
   PRIVATE
     features

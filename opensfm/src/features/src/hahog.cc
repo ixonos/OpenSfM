@@ -4,6 +4,12 @@
 #include <vector>
 #include <iostream>
 
+#if _MSC_VER > 1700 
+#define _USE_MATH_DEFINES
+#include <math.h>
+#endif
+
+
 extern "C" {
   #include <third_party/vlfeat/vl/covdet.h>
   #include <third_party/vlfeat/vl/sift.h>

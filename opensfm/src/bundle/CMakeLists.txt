@@ -23,6 +23,10 @@ if (SUITESPARSE_FOUND)
 endif()
 target_include_directories(bundle PRIVATE ${CMAKE_SOURCE_DIR})
 
+if (WIN32)
+    target_include_directories(bundle PRIVATE ${CERES_INCLUDE_DIR} ${GFLAGS_INCLUDE_DIR} ${GLOG_INCLUDE_DIR})
+endif()
+
 #set(BUNDLE_TEST_FILES
 #    test/reprojection_errors_test.cc
 #)
@@ -35,6 +39,11 @@ target_include_directories(bundle PRIVATE ${CMAKE_SOURCE_DIR})
 #add_test(bundle_test bundle_test)
 
 pybind11_add_module(pybundle python/pybind.cc)
+
+if (WIN32)
+    target_include_directories(pybundle PRIVATE ${GFLAGS_INCLUDE_DIR} ${GLOG_INCLUDE_DIR})
+endif()
+
 target_link_libraries(pybundle PRIVATE
   bundle
   geometry
