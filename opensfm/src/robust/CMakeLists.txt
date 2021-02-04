@@ -22,8 +22,11 @@ target_link_libraries(robust
     geometry
 )
 target_include_directories(robust PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(robust PRIVATE ${GFLAGS_INCLUDE_DIR} ${GLOG_INCLUDE_DIR} ${CERES_INCLUDE_DIR})
 
 pybind11_add_module(pyrobust python/pybind.cc)
+target_include_directories(pyrobust PRIVATE ${CERES_INCLUDE_DIR} ${GFLAGS_INCLUDE_DIR})
+
 target_link_libraries(pyrobust 
   PRIVATE 
     robust

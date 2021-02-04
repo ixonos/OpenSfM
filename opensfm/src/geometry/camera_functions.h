@@ -8,6 +8,12 @@
 
 #include <iostream>
 
+#if _MSC_VER > 1700 
+#define _USE_MATH_DEFINES
+#include <math.h>
+#endif
+
+
 enum class ProjectionType { PERSPECTIVE, BROWN, FISHEYE, SPHERICAL, DUAL };
 enum class Disto { K1 = 0, K2 = 1, K3 = 2, P1 = 3, P2 = 4, COUNT = 5 };
 

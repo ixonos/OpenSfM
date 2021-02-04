@@ -17,7 +17,8 @@ target_link_libraries(geometry
   PRIVATE 
     foundation
 )
-target_include_directories(geometry PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(geometry PUBLIC ${CMAKE_SOURCE_DIR} ${CERES_INCLUDE_DIR})
+target_include_directories(geometry PRIVATE ${GFLAGS_INCLUDE_DIR} ${GLOG_INCLUDE_DIR})
 
 #set(GEOMETRY_TEST_FILES
 #    test/camera_test.cc
@@ -31,6 +32,7 @@ target_include_directories(geometry PUBLIC ${CMAKE_SOURCE_DIR})
 #add_test(geometry_test geometry_test)
 
 pybind11_add_module(pygeometry python/pybind.cc)
+target_include_directories(pygeometry PRIVATE ${GFLAGS_INCLUDE_DIR} ${GLOG_INCLUDE_DIR})
 target_link_libraries(pygeometry 
   PRIVATE
     geometry

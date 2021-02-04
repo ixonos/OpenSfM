@@ -1,4 +1,7 @@
-#cmake_minimum_required(VERSION 3.0)
+if (WIN32)
+    cmake_minimum_required(VERSION 3.0)
+endif()
+
 LINK_DIRECTORIES(/usr/local/Cellar)
 
 project(opensfm C CXX)
@@ -28,26 +31,71 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # For compiling VLFeat
 add_definitions(-DVL_DISABLE_AVX)
 
-#include_directories(/usr/local/Cellar/gflags/2.2.2/include)
-#include_directories(/usr/local/Cellar/glog/0.4.0/include)
-include_directories(/usr/local/include)
+if (UNIX)
+    #include_directories(/usr/local/Cellar/gflags/2.2.2/include)
+    #include_directories(/usr/local/Cellar/glog/0.4.0/include)
+    include_directories(/usr/local/include)
+else()
+    set(EIGEN_INCLUDE_DIR "C:/Users/digitalist/digitalist/projects/vcpkg/packages/eigen3_x64-windows/include")
+
+    set(AMD_LIBRARY "C:/Users/digitalist/digitalist/projects/vcpkg/packages/suitesparse_x64-windows/lib/libamd.lib")
+    set(CAMD_LIBRARY "C:/Users/digitalist/digitalist/projects/vcpkg/packages/suitesparse_x64-windows/lib/libcamd.lib")
+    set(COLAMD_LIBRARY "C:/Users/digitalist/digitalist/projects/vcpkg/packages/suitesparse_x64-windows/lib/libcolamd.lib")
+    set(CCOLAMD_LIBRARY "C:/Users/digitalist/digitalist/projects/vcpkg/packages/suitesparse_x64-windows/lib/libccolamd.lib")
+    set(CHOLMOD_LIBRARY "C:/Users/digitalist/digitalist/projects/vcpkg/packages/suitesparse_x64-windows/lib/libcholmod.lib")
+    set(CXSPARSE_LIBRARY "C:/Users/digitalist/digitalist/projects/vcpkg/packages/suitesparse_x64-windows/lib/libcxsparse.lib")
+    set(SUITESPARSEQR_LIBRARY "C:/Users/digitalist/digitalist/projects/vcpkg/packages/suitesparse_x64-windows/lib/libspqr.lib")
+
+    set(AMD_INCLUDE_DIR "C:/Users/digitalist/digitalist/projects/vcpkg/installed/x64-windows/include")
+    set(CAMD_INCLUDE_DIR "C:/Users/digitalist/digitalist/projects/vcpkg/installed/x64-windows/include")
+    set(COLAMD_INCLUDE_DIR "C:/Users/digitalist/digitalist/projects/vcpkg/installed/x64-windows/include")
+    set(CCOLAMD_INCLUDE_DIR "C:/Users/digitalist/digitalist/projects/vcpkg/installed/x64-windows/include")
+    set(CHOLMOD_INCLUDE_DIR "C:/Users/digitalist/digitalist/projects/vcpkg/installed/x64-windows/include")
+    set(CXSPARSE_INCLUDE_DIR "C:/Users/digitalist/digitalist/projects/vcpkg/installed/x64-windows/include")
+    set(SUITESPARSEQR_INCLUDE_DIR "C:/Users/digitalist/digitalist/projects/vcpkg/installed/x64-windows/include")
+
+
+    set(CERES_INCLUDE_DIR "C:/Users/digitalist/digitalist/projects/vcpkg/packages/ceres_x64-windows/include")
+    set(CERES_LIBRARY "C:/Users/digitalist/digitalist/projects/vcpkg/packages/ceres_x64-windows/lib/ceres.lib")
+
+    set(GFLAGS_INCLUDE_DIR "C:/Users/digitalist/digitalist/projects/vcpkg/packages/gflags_x64-windows/include")
+    set(GFLAGS_LIBRARY "C:/Users/digitalist/digitalist/projects/vcpkg/packages/gflags_x64-windows/lib/gflags.lib")
+
+    set(GLOG_INCLUDE_DIR "C:/Users/digitalist/digitalist/projects/vcpkg/packages/glog_x64-windows/include")
+    set(GLOG_LIBRARY "C:/Users/digitalist/digitalist/projects/vcpkg/packages/glog_x64-windows/lib/glog.lib")
+
+    set(OpenCV_DIR "C:/opencv/build")
+endif()
 
 
 ####### Find Dependencies #######
-#find_package(OpenMP)
+
+if (WIN32)
+    find_package(OpenMP)
+endif()
+
 if (OPENMP_FOUND)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
-find_package(LAPACK)
-find_package(SuiteSparse)
+find_package(lapack CONFIG REQUIRED)
+set(BLAS_LIBRARIES "C:/Users/digitalist/digitalist/projects/vcpkg/packages/suitesparse_x64-windows/lib/libblas.lib")
+set(LAPACK_LIBRARIES "C:/Users/digitalist/digitalist/projects/vcpkg/packages/suitesparse_x64-windows/lib/liblapack.lib")
+find_package(suitesparse CONFIG REQUIRED)
+set(BLAS_LIBRARIES "C:/Users/digitalist/digitalist/projects/vcpkg/packages/suitesparse_x64-windows/lib/libblas.lib")
+set(LAPACK_LIBRARIES "C:/Users/digitalist/digitalist/projects/vcpkg/packages/suitesparse_x64-windows/lib/liblapack.lib")
+
 find_package(Eigen REQUIRED)
 find_package(Ceres REQUIRED)
 find_package(Gflags REQUIRED)
 find_package(Glog REQUIRED)
-find_package(gtest REQUIRED)
-include_directories(${GLOG_INCLUDE_DIRS} ${GFLAGS_INCLUDE_DIRS})
+
+if (UNIX)
+    find_package(gtest REQUIRED)
+    include_directories(${GLOG_INCLUDE_DIRS} ${GFLAGS_INCLUDE_DIRS})
+endif()
+
 find_package(OpenCV)
 # OpenCV's OpenCVConfig will enforce imgcodecs for < 3.0 
 # (even if OPTIONAL_COMPONENTS) so we remove it as we don't need it
